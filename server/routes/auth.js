@@ -98,76 +98,82 @@ router.post('/send-otp', async (req, res) => {
       { otp, createdAt: new Date(), expiresAt: expiryTime },
       { upsert: true, new: true }
     );
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: 'BudgetBuddy: Confirm Your Email to Get Started',
+    //   html: `
+    //     <!DOCTYPE html>
+    //     <html>
+    //     <head>
+    //       <meta charset="UTF-8">
+    //       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //       <title>Email Verification - BudgetBuddy</title>
+    //       <style>
+    //         body {
+    //           font-family: Arial, sans-serif;
+    //           background-color: #f8f9fa;
+    //           margin: 0;
+    //           padding: 0;
+    //         }
+    //         .container {
+    //           max-width: 600px;
+    //           margin: 20px auto;
+    //           background-color: #ffffff;
+    //           border: 1px solid #d1d5db;
+    //           border-radius: 8px;
+    //           padding: 20px;
+    //           text-align: center;
+    //           box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    //         }
+    //         h2 {
+    //           color: #1e40af;
+    //         }
+    //         p {
+    //           color: #333333;
+    //           font-size: 16px;
+    //           line-height: 1.5;
+    //         }
+    //         .otp-code {
+    //           font-size: 24px;
+    //           font-weight: bold;
+    //           color: #2563eb;
+    //           background-color: #e0f2fe;
+    //           display: inline-block;
+    //           padding: 10px 20px;
+    //           border-radius: 5px;
+    //           margin: 10px 0;
+    //         }
+    //         .footer {
+    //           font-size: 12px;
+    //           color: #6b7280;
+    //           margin-top: 20px;
+    //         }
+    //         a {
+    //           color: #2563eb;
+    //           text-decoration: none;
+    //         }
+    //       </style>
+    //     </head>
+    //     <body>
+    //       <div class="container">
+    //         <h2>Welcome to BudgetBuddy!</h2>
+    //         <p>Hello,Buddy</p>
+    //         <p>Thank you for Trusting us!. To complete your registration, please use the OTP code below:</p>
+    //         <div class="otp-code">${otp}</div>
+    //         <p>This code is valid for <strong>10 minutes</strong>. If you did not want this, please ignore this email.</p>
+    //         <p>Happy budgeting!<br><strong>The BudgetBuddy Team</strong></p>
+    //       </div>
+    //     </body>
+    //     </html>
+    //   `,
+    // };
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'BudgetBuddy: Confirm Your Email to Get Started',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Email Verification - BudgetBuddy</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              background-color: #f8f9fa;
-              margin: 0;
-              padding: 0;
-            }
-            .container {
-              max-width: 600px;
-              margin: 20px auto;
-              background-color: #ffffff;
-              border: 1px solid #d1d5db;
-              border-radius: 8px;
-              padding: 20px;
-              text-align: center;
-              box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            }
-            h2 {
-              color: #1e40af;
-            }
-            p {
-              color: #333333;
-              font-size: 16px;
-              line-height: 1.5;
-            }
-            .otp-code {
-              font-size: 24px;
-              font-weight: bold;
-              color: #2563eb;
-              background-color: #e0f2fe;
-              display: inline-block;
-              padding: 10px 20px;
-              border-radius: 5px;
-              margin: 10px 0;
-            }
-            .footer {
-              font-size: 12px;
-              color: #6b7280;
-              margin-top: 20px;
-            }
-            a {
-              color: #2563eb;
-              text-decoration: none;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h2>Welcome to BudgetBuddy!</h2>
-            <p>Hello,Buddy</p>
-            <p>Thank you for Trusting us!. To complete your registration, please use the OTP code below:</p>
-            <div class="otp-code">${otp}</div>
-            <p>This code is valid for <strong>10 minutes</strong>. If you did not want this, please ignore this email.</p>
-            <p>Happy budgeting!<br><strong>The BudgetBuddy Team</strong></p>
-          </div>
-        </body>
-        </html>
-      `,
-    };
+      subject: "Your OTP Code",
+      text: `Your OTP is: ${otp}. It expires in 5 minutes.`,
+  };
     
     
 
