@@ -158,10 +158,10 @@ router.post('/send-otp', async (req, res) => {
         <body>
           <div class="container">
             <h2>Welcome to BudgetBuddy!</h2>
-            <p>Hello,</p>
-            <p>Thank you for signing up with <strong>BudgetBuddy</strong>. To complete your registration, please use the verification code below:</p>
+            <p>Hello,Buddy</p>
+            <p>Thank you for Trusting us!. To complete your registration, please use the OTP code below:</p>
             <div class="otp-code">${otp}</div>
-            <p>This code is valid for <strong>10 minutes</strong>. If you did not request this, please ignore this email.</p>
+            <p>This code is valid for <strong>10 minutes</strong>. If you did not want this, please ignore this email.</p>
             <p>Happy budgeting!<br><strong>The BudgetBuddy Team</strong></p>
           </div>
         </body>
@@ -381,8 +381,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
             <body>
               <div class="container">
                 <h2>Expense Update from BudgetBuddy</h2>
-                <p>Hello <span class="highlight">${user.username}</span>,</p>
-                <p>You’ve just saved new expenses. Here’s the breakdown:</p>
+                <p>Hello ,<span class="highlight">${user.username}</span>,</p>
+                <p>You’ve just saved new expenses from expenses tracker. Here’s the overview:</p>
                 <ul>
                   ${Object.entries(latestExpense)
                     .map(([cat, amt]) => `<li>${cat}: ₹${amt.toFixed(2)}</li>`)
