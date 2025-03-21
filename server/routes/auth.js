@@ -65,8 +65,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  debug: true,
-  logger: true,
+  debug: false,
+  logger: false,
 });
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
