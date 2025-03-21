@@ -1,0 +1,716 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.uh-container {
+  background-color: #F4F6F8; /* LinkedIn light grey */
+  color: #293241; /* LinkedIn dark grey */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Loader */
+.uh-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(41, 50, 65, 0.7); /* Semi-transparent LinkedIn dark grey */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-size: 24px;
+  color: #FFFFFF;
+}
+
+/* Toast - Moved to Top-Right Corner */
+.uh-toast {
+  position: fixed;
+  top: 30px; /* Changed from bottom: 30px */
+  right: 30px;
+  background: #FFFFFF;
+  color: #293241; /* LinkedIn dark grey */
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.2);
+  z-index: 1000;
+  animation: slideInFromTop 0.5s ease-out, fadeOut 0.5s ease-out 2.5s forwards; /* Updated animation */
+}
+
+/* Navbar */
+.uh-navbar {
+  width: 100%;
+  background: #FFFFFF;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 8px rgba(41, 50, 65, 0.1);
+}
+
+.uh-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.uh-navbar-logo {
+  width: 80px; /* Increased logo size */
+  height: 80px;
+  object-fit: contain; /* Full logo display */
+  transition: transform 0.3s;
+}
+
+.uh-navbar-logo:hover {
+  transform: scale(1.1);
+}
+
+.uh-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.uh-navbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.uh-navbar-profile:hover {
+  transform: scale(1.05);
+}
+
+.uh-navbar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.uh-navbar-avatar-default {
+  color: #0077B5; /* LinkedIn primary blue */
+}
+
+.uh-navbar-username {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.uh-navbar-logout {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #0077B5; /* LinkedIn primary blue */
+  border-radius: 8px;
+  background: transparent;
+  color: #0077B5;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.uh-navbar-logout:hover {
+  background-color: #0077B5;
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* Content */
+.uh-content {
+  max-width: 1400px;
+  width: 100%;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Main Section */
+.uh-main {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.uh-image-container {
+  width: 50%;
+}
+
+.uh-image {
+  width: 100%;
+  max-height: 500px; /* Increased size, capped */
+  object-fit: contain; /* Full image display */
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.2);
+  transition: transform 0.3s;
+}
+
+.uh-image:hover {
+  transform: scale(1.02);
+}
+
+.uh-instructions-card {
+  width: 50%;
+  padding: 30px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.1);
+}
+
+.uh-instructions-card h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 15px;
+}
+
+.uh-instructions-card p {
+  font-size: 18px;
+  color: #666D78; /* LinkedIn muted grey */
+  margin-bottom: 20px;
+}
+
+.uh-instructions-list h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #293241;
+  margin-bottom: 15px;
+}
+
+.uh-instructions-list ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.uh-instructions-list li {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+  margin-bottom: 10px;
+}
+
+/* Expense Section */
+.uh-expense-section {
+  display: flex;
+  gap: 40px;
+}
+
+.uh-expense-tracker,
+.uh-manual-expense-entry {
+  width: 50%;
+  padding: 30px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.1);
+}
+
+.uh-expense-tracker h2,
+.uh-manual-expense-entry h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 20px;
+}
+
+.uh-expense-tracker p,
+.uh-manual-expense-entry p {
+  font-size: 18px;
+  color: #293241;
+  margin-bottom: 20px;
+}
+
+.uh-upload-input,
+.uh-manual-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #DDE2E6; /* Light grey border */
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.uh-manual-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.uh-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.uh-process-button,
+.uh-chart-button,
+.uh-save-button,
+.uh-add-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.uh-process-button {
+  background-color: #0077B5; /* LinkedIn primary blue */
+  color: #FFFFFF;
+}
+
+.uh-process-button:hover {
+  background-color: #005F91; /* Darker LinkedIn blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+}
+
+.uh-chart-button {
+  background-color: #00A0DC; /* LinkedIn secondary blue */
+  color: #FFFFFF;
+}
+
+.uh-chart-button:hover {
+  background-color: #0088B8; /* Darker secondary blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 160, 220, 0.3);
+}
+
+.uh-save-button,
+.uh-add-button {
+  background-color: #38bdf8; /* Light blue from chart */
+  color: #FFFFFF;
+}
+
+.uh-save-button:hover,
+.uh-add-button:hover {
+  background-color: #1e3a8a; /* Dark blue from chart */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.uh-extracted-text,
+.uh-temp-expenses,
+.uh-manual-expenses {
+  margin-bottom: 20px;
+}
+
+.uh-extracted-text h3,
+.uh-temp-expenses h3,
+.uh-manual-expenses h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #293241;
+  margin-bottom: 10px;
+}
+
+.uh-extracted-text p,
+.uh-temp-expenses ul,
+.uh-manual-expenses ul {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+}
+
+.uh-temp-expenses ul,
+.uh-manual-expenses ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.uh-chart-container {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.uh-chart {
+  width: 100%;
+  height: 100%;
+}
+
+/* Saved Expenses */
+.uh-expenses-display {
+  padding: 30px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.1);
+}
+
+.uh-expenses-display h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 20px;
+}
+
+.uh-expense-entry {
+  margin-bottom: 20px;
+}
+
+.uh-expense-entry h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #293241;
+  margin-bottom: 10px;
+}
+
+.uh-expense-entry ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.uh-expense-entry li {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+  margin-bottom: 5px;
+}
+
+.uh-expenses-display p {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+}
+
+/* Keyframes */
+@keyframes slideInFromTop {
+  0% { transform: translateY(-100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .uh-content {
+    padding: 30px 40px;
+  }
+
+  .uh-main {
+    gap: 30px;
+  }
+
+  .uh-expense-section {
+    gap: 30px;
+  }
+
+  .uh-image {
+    max-height: 450px;
+  }
+}
+
+@media (max-width: 992px) {
+  .uh-main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .uh-image-container,
+  .uh-instructions-card {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .uh-image {
+    max-height: 400px;
+  }
+
+  .uh-expense-section {
+    flex-direction: column;
+  }
+
+  .uh-expense-tracker,
+  .uh-manual-expense-entry {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .uh-navbar {
+    padding: 15px 30px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .uh-navbar-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .uh-navbar-brand {
+    font-size: 20px;
+  }
+
+  .uh-content {
+    padding: 20px 25px;
+  }
+
+  .uh-instructions-card h1 {
+    font-size: 28px;
+  }
+
+  .uh-expense-tracker h2,
+  .uh-manual-expense-entry h2,
+  .uh-expenses-display h3 {
+    font-size: 24px;
+  }
+
+  .uh-image {
+    max-height: 300px;
+  }
+
+  .uh-chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .uh-navbar {
+    padding: 10px 15px;
+  }
+
+  .uh-navbar-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .uh-navbar-brand {
+    font-size: 18px;
+  }
+
+  .uh-navbar-username {
+    font-size: 16px;
+  }
+
+  .uh-navbar-logout {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .uh-content {
+    padding: 15px 10px;
+  }
+
+  .uh-instructions-card,
+  .uh-expense-tracker,
+  .uh-manual-expense-entry,
+  .uh-expenses-display {
+    padding: 20px;
+  }
+
+  .uh-instructions-card h1 {
+    font-size: 24px;
+  }
+
+  .uh-instructions-card p {
+    font-size: 16px;
+  }
+
+  .uh-instructions-list h2 {
+    font-size: 20px;
+  }
+
+  .uh-instructions-list li {
+    font-size: 14px;
+  }
+
+  .uh-expense-tracker h2,
+  .uh-manual-expense-entry h2,
+  .uh-expenses-display h3 {
+    font-size: 20px;
+  }
+
+  .uh-expense-tracker p,
+  .uh-manual-expense-entry p {
+    font-size: 16px;
+  }
+
+  .uh-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .uh-process-button,
+  .uh-chart-button,
+  .uh-save-button,
+  .uh-add-button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .uh-image {
+    max-height: 200px;
+  }
+
+  .uh-chart-container {
+    height: 200px;
+  }
+
+  .uh-toast {
+    top: 20px; /* Adjusted for smaller screens */
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Inline Spinner for Buttons */
+.inline-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #FFFFFF; /* White to contrast button background */
+  border-top: 3px solid #0077B5; /* LinkedIn primary blue */
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* Update .uh-loader to include spinner */
+.uh-loader .spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #00A0DC; /* LinkedIn secondary blue */
+  border-top: 6px solid #0077B5; /* LinkedIn primary blue */
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite, pulse 1.5s infinite;
+}
+
+/* Assistant Button Container */
+.uh-assistant-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.uh-assistant-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #38bdf8;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.uh-assistant-btn:hover {
+  background-color: #1e3a8a;
+  transform: scale(1.05);
+}
+
+.uh-assistant-btn svg {
+  margin-right: 8px;
+}
+
+/* Chat Popup */
+.uh-chat-popup {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 350px;
+  height: 400px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.uh-chat-header {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.uh-chat-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.uh-chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.uh-chat-message {
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 5px;
+  max-width: 80%;
+}
+
+.uh-chat-message.user {
+  background-color: #38bdf8;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.uh-chat-message.bot {
+  background-color: #f1f5f9;
+  color: #1e3a8a;
+  align-self: flex-start;
+}
+
+.uh-chat-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.uh-chat-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.uh-chat-input button {
+  padding: 8px 12px;
+  background-color: #38bdf8;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.uh-chat-input button:disabled {
+  background-color: #6b7280;
+  cursor: not-allowed;
+}

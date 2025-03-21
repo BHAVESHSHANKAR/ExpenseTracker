@@ -1,0 +1,586 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.landing-container {
+  background-color: #F4F6F8; /* LinkedIn light grey */
+  color: #293241; /* LinkedIn dark grey */
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.landing-container.dark-mode {
+  background-color: #293241; /* LinkedIn dark grey */
+  color: #F4F6F8; /* LinkedIn light grey */
+}
+
+/* Loader */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(41, 50, 65, 0.7); /* Semi-transparent LinkedIn dark grey */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #00A0DC; /* LinkedIn secondary blue */
+  border-top: 6px solid #0077B5; /* LinkedIn primary blue */
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite, pulse 1.5s infinite;
+}
+
+.landing-container.dark-mode .spinner {
+  border: 6px solid #0077B5; /* Primary blue */
+  border-top: 6px solid #F4F6F8; /* Light grey */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Header */
+.header {
+  background: #FFFFFF;
+  padding: 25px 50px;
+  box-shadow: 0 3px 8px rgba(41, 50, 65, 0.1);
+}
+
+.landing-container.dark-mode .header {
+  background: #293241; /* LinkedIn dark grey */
+  box-shadow: 0 3px 8px rgba(244, 246, 248, 0.1);
+}
+
+.header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content:flex-start;
+  gap:10px;
+}
+
+.logo {
+  width: 110px;
+  height: 110px;
+  object-fit: contain; /* Full logo display */
+  transition: transform 0.3s;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.header h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #293241; /* LinkedIn dark grey */
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.landing-container.dark-mode .nav-links a {
+  color: #F4F6F8; /* LinkedIn light grey */
+}
+
+.nav-links a:hover {
+  color: #0077B5; /* LinkedIn primary blue */
+  transform: translateY(-2px);
+}
+
+.dark-mode-toggle {
+  background: #FFFFFF;
+  border: 2px solid #0077B5; /* LinkedIn primary blue */
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.landing-container.dark-mode .dark-mode-toggle {
+  background: #293241;
+  border: 2px solid #00A0DC; /* LinkedIn secondary blue */
+}
+
+.dark-mode-toggle:hover {
+  background: #0077B5; /* LinkedIn primary blue */
+  border-color: #0077B5;
+  transform: rotate(20deg);
+}
+
+.landing-container.dark-mode .dark-mode-toggle:hover {
+  background: #00A0DC; /* LinkedIn secondary blue */
+  border-color: #00A0DC;
+}
+
+/* Hero Section */
+.hero {
+  padding: 80px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 50px;
+}
+
+.hero-content {
+  max-width: 55%;
+}
+
+.hero h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #666D78; /* LinkedIn muted grey */
+  margin-bottom: 35px;
+}
+
+.landing-container.dark-mode .hero p {
+  color: #A5ACB8; /* Lighter muted grey */
+}
+
+.cta-button {
+  padding: 14px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: #0077B5; /* LinkedIn primary blue */
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #005F91; /* Darker LinkedIn blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+}
+
+.landing-container.dark-mode .cta-button {
+  background-color: #00A0DC; /* LinkedIn secondary blue */
+}
+
+.landing-container.dark-mode .cta-button:hover {
+  background-color: #0088B8; /* Darker secondary blue */
+  box-shadow: 0 4px 12px rgba(0, 160, 220, 0.3);
+}
+
+.hero-image {
+  max-width: 45%;
+  width: 100%;
+  object-fit: contain; /* Full image display */
+  max-height: 400px; /* Prevents overly large images */
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.2);
+  transition: transform 0.3s;
+}
+
+.hero-image:hover {
+  transform: scale(1.02);
+}
+
+/* About Section */
+.about {
+  padding: 80px 50px;
+  text-align: center;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.about h3 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.about p {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.landing-container.dark-mode .about p {
+  color: #A5ACB8; /* Lighter muted grey */
+}
+
+/* Features Section */
+.features {
+  padding: 80px 50px;
+  background: #F0F2F5; /* Slightly darker LinkedIn light grey */
+  text-align: center;
+}
+
+.landing-container.dark-mode .features {
+  background: #313847; /* Slightly lighter LinkedIn dark grey */
+}
+
+.features h3 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.feature-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.1);
+  padding: 25px;
+  width: 320px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.landing-container.dark-mode .feature-card {
+  background: #293241;
+  box-shadow: 0 6px 16px rgba(244, 246, 248, 0.1);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 119, 181, 0.2);
+}
+
+.landing-container.dark-mode .feature-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 160, 220, 0.2);
+}
+
+.card-header {
+  padding-bottom: 20px;
+}
+
+.card-header h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0077B5; /* LinkedIn primary blue */
+}
+
+.landing-container.dark-mode .card-header h4 {
+  color: #00A0DC; /* LinkedIn secondary blue */
+}
+
+.card-content img {
+  width: 100%;
+  object-fit: contain; /* Full image display */
+  max-height: 200px; /* Prevents overly large images */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  transition: transform 0.3s;
+}
+
+.card-content img:hover {
+  transform: scale(1.03);
+}
+
+.card-content p {
+  font-size: 15px;
+  color: #666D78; /* LinkedIn muted grey */
+}
+
+.landing-container.dark-mode .card-content p {
+  color: #A5ACB8; /* Lighter muted grey */
+}
+
+/* Footer */
+.footer {
+  padding: 25px 50px;
+  background: #FFFFFF;
+  text-align: center;
+  border-top: 1px solid #DDE2E6; /* Light grey border */
+}
+
+.landing-container.dark-mode .footer {
+  background: #293241;
+  border-top: 1px solid #3E4656; /* Darker grey border */
+}
+
+.footer p {
+  font-size: 14px;
+  color: #666D78; /* LinkedIn muted grey */
+}
+
+.landing-container.dark-mode .footer p {
+  color: #A5ACB8; /* Lighter muted grey */
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #FFFFFF;
+  color: #293241; /* LinkedIn dark grey */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.2);
+  z-index: 1000;
+  animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-out 2.5s forwards;
+}
+
+.landing-container.dark-mode .toast {
+  background: #293241;
+  color: #F4F6F8; /* LinkedIn light grey */
+  box-shadow: 0 6px 16px rgba(244, 246, 248, 0.2);
+}
+
+.toast h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.toast p {
+  font-size: 14px;
+}
+
+@keyframes slideIn {
+  0% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .header, .hero, .about, .features, .footer {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .feature-card {
+    width: 280px;
+  }
+
+  .hero-image {
+    max-height: 350px;
+  }
+
+  .card-content img {
+    max-height: 180px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero {
+    padding: 60px 30px;
+    gap: 40px;
+  }
+
+  .hero h2 {
+    font-size: 36px;
+  }
+
+  .hero-image {
+    max-height: 300px;
+  }
+
+  .feature-cards {
+    gap: 30px;
+  }
+
+  .feature-card {
+    width: 260px;
+  }
+
+  .card-content img {
+    max-height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 25px;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .nav-links {
+    gap: 20px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+  }
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  .hero-content,
+  .hero-image {
+    max-width: 100%;
+  }
+
+  .hero h2 {
+    font-size: 32px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .hero-image {
+    max-height: 250px;
+  }
+
+  .cta-button {
+    padding: 12px 25px;
+  }
+
+  .about, .features {
+    padding: 60px 20px;
+  }
+
+  .about h3, .features h3 {
+    font-size: 28px;
+  }
+
+  .feature-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .card-content img {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 15px 15px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    gap: 15px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+  }
+
+  .dark-mode-toggle {
+    padding: 6px;
+  }
+
+  .hero {
+    padding: 40px 15px;
+  }
+
+  .hero h2 {
+    font-size: 26px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .hero-image {
+    max-height: 200px;
+  }
+
+  .cta-button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .about, .features {
+    padding: 40px 15px;
+  }
+
+  .about h3, .features h3 {
+    font-size: 24px;
+  }
+
+  .card-header h4 {
+    font-size: 20px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+  }
+
+  .card-content img {
+    max-height: 150px;
+  }
+
+  .footer {
+    padding: 20px 15px;
+  }
+
+  .toast {
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+  }
+}

@@ -1,0 +1,396 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.profile-container {
+  background-color: #F4F6F8; /* LinkedIn light grey */
+  color: #293241; /* LinkedIn dark grey */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.profile-container h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Profile Details */
+.profile-details {
+  max-width: 900px;
+  width: 100%;
+  padding: 30px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(41, 50, 65, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.profile-details p {
+  font-size: 18px;
+  color: #293241;
+}
+
+.profile-details p strong {
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-right: 10px;
+}
+
+/* Salary Section */
+.profile-salary {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-salary strong {
+  color: #0077B5; /* LinkedIn primary blue */
+}
+
+.profile-salary span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-salary-edit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-salary-input {
+  width: 150px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #DDE2E6; /* Light grey border */
+  border-radius: 6px;
+  background: #F4F6F8;
+  color: #293241;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.profile-salary-input:focus {
+  border-color: #0077B5; /* LinkedIn primary blue */
+  box-shadow: 0 0 5px rgba(0, 119, 181, 0.3);
+  outline: none;
+}
+
+.profile-edit-salary-button,
+.profile-save-salary-button,
+.profile-cancel-button {
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.profile-edit-salary-button {
+  background-color: #00A0DC; /* LinkedIn secondary blue */
+  color: #FFFFFF;
+  margin-left: 10px;
+}
+
+.profile-edit-salary-button:hover {
+  background-color: #0088B8; /* Darker secondary blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 160, 220, 0.3);
+}
+
+.profile-save-salary-button {
+  background-color: #0077B5; /* LinkedIn primary blue */
+  color: #FFFFFF;
+}
+
+.profile-save-salary-button:hover {
+  background-color: #005F91; /* Darker LinkedIn blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+}
+
+.profile-cancel-button {
+  background-color: #666D78; /* LinkedIn muted grey */
+  color: #FFFFFF;
+}
+
+.profile-cancel-button:hover {
+  background-color: #4A5059; /* Darker muted grey */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 109, 120, 0.3);
+}
+
+/* Expenses Section */
+.profile-expenses {
+  margin-top: 20px;
+}
+
+.profile-expenses h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 15px;
+}
+
+.profile-expense-entry {
+  margin-bottom: 20px;
+}
+
+.profile-expense-entry h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #293241;
+  margin-bottom: 10px;
+}
+
+.profile-expense-entry ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.profile-expense-entry li {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+  margin-bottom: 5px;
+}
+
+.profile-expenses p {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+}
+
+/* Last Image Content */
+.profile-image-content {
+  margin-top: 20px;
+}
+
+.profile-image-content h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0077B5; /* LinkedIn primary blue */
+  margin-bottom: 15px;
+}
+
+.profile-image-content p {
+  font-size: 16px;
+  color: #666D78; /* LinkedIn muted grey */
+  white-space: pre-wrap; /* Preserve line breaks */
+}
+
+/* Chart Container */
+.profile-chart-container {
+  height: 300px;
+  margin: 20px 0;
+}
+
+.profile-chart {
+  width: 100%;
+  height: 100%;
+}
+
+/* Buttons */
+.profile-reset-button,
+.profile-back-button {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.profile-reset-button {
+  background-color: #38bdf8; /* Light blue from chart */
+  color: #FFFFFF;
+  margin-top: 20px;
+}
+
+.profile-reset-button:hover {
+  background-color: #1e3a8a; /* Dark blue from chart */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.profile-back-button {
+  background-color: #0077B5; /* LinkedIn primary blue */
+  color: #FFFFFF;
+  margin-top: 30px;
+}
+
+.profile-back-button:hover {
+  background-color: #005F91; /* Darker LinkedIn blue */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+}
+
+/* Keyframes (for potential animations) */
+@keyframes slideIn {
+  0% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .profile-details {
+    max-width: 800px;
+    padding: 25px;
+  }
+
+  .profile-chart-container {
+    height: 280px;
+  }
+}
+
+@media (max-width: 992px) {
+  .profile-container {
+    padding: 30px 15px;
+  }
+
+  .profile-details {
+    max-width: 600px;
+  }
+
+  .profile-container h1 {
+    font-size: 32px;
+  }
+
+  .profile-expenses h3,
+  .profile-image-content h3 {
+    font-size: 22px;
+  }
+
+  .profile-chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px 10px;
+  }
+
+  .profile-details {
+    padding: 20px;
+  }
+
+  .profile-container h1 {
+    font-size: 28px;
+  }
+
+  .profile-details p {
+    font-size: 16px;
+  }
+
+  .profile-salary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .profile-salary-edit {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .profile-salary-input {
+    width: 100%;
+  }
+
+  .profile-edit-salary-button,
+  .profile-save-salary-button,
+  .profile-cancel-button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .profile-expenses h3,
+  .profile-image-content h3 {
+    font-size: 20px;
+  }
+
+  .profile-expense-entry h4 {
+    font-size: 18px;
+  }
+
+  .profile-chart-container {
+    height: 200px;
+  }
+
+  .profile-reset-button,
+  .profile-back-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 15px 10px;
+  }
+
+  .profile-details {
+    padding: 15px;
+  }
+
+  .profile-container h1 {
+    font-size: 24px;
+  }
+
+  .profile-details p {
+    font-size: 14px;
+  }
+
+  .profile-salary-input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .profile-expenses h3,
+  .profile-image-content h3 {
+    font-size: 18px;
+  }
+
+  .profile-expense-entry h4 {
+    font-size: 16px;
+  }
+
+  .profile-expense-entry li,
+  .profile-image-content p {
+    font-size: 14px;
+  }
+
+  .profile-chart-container {
+    height: 180px;
+  }
+
+  .profile-reset-button,
+  .profile-back-button {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+}
