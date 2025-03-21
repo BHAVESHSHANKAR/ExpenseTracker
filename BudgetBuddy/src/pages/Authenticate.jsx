@@ -178,8 +178,6 @@ function Authenticate() {
         ) : (
           <div className="auth-form signup-form">
             <img src={signupImage} alt="Signup" className="auth-image slide-right" />
-            <p>When you get OTP Chek you otp in email in Spam option</p>
-              <p>Trust us! its not a Spam we have error on Our End</p>
             <div className="form-wrapper slide-left">
               <h2>Signup</h2>
               <form onSubmit={otpSent ? handleSignupSubmit : handleSendOtp}>
