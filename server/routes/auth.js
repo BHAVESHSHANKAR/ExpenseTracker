@@ -221,9 +221,102 @@ router.get('/profile', authenticateToken, async (req, res) => {
 });
 
 // Update Profile with Email Notification
+// router.put('/profile', authenticateToken, async (req, res) => {
+//   try {
+//     const { salary, expenses, lastImageContent, chartImage } = req.body;
+//     const updates = {};
+
+//     // Encrypt fields for database storage
+//     if (salary !== undefined && salary !== null) {
+//       updates.salary = encrypt(salary.toString());
+//     }
+//     if (expenses !== undefined) {
+//       updates.expenses = expenses.map(exp => ({
+//         id: exp.id,
+//         expenses: encrypt(JSON.stringify(exp.expenses)), // Encrypt the expenses object as a JSON string
+//         date: new Date(exp.date), // Ensure date is a Date object
+//       }));
+//     }
+//     if (lastImageContent !== undefined) {
+//       updates.lastImageContent = encrypt(lastImageContent);
+//     }
+
+//     const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true }).select('-password');
+//     if (!user) return res.status(404).json({ message: 'User not found' });
+
+//     if (expenses && expenses.length > 0) {
+//       const latestExpense = expenses[expenses.length - 1].expenses; // Plain text from request
+//       const totalDeduction = Object.values(latestExpense).reduce((sum, val) => sum + val, 0);
+      
+//       // Use plain-text salary from request, fallback to decrypted current salary if not provided
+//       const plainSalary = salary !== undefined && salary !== null ? salary : decrypt(user.salary);
+//       const isHighExpended = totalDeduction > parseFloat(plainSalary) * 0.5;
+
+//       const mailOptions = {
+//         from: process.env.EMAIL_USER,
+//         to: user.email,
+//         subject: 'BudgetBuddy - Your Latest Expense Update',
+//         html: `
+//           <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
+//             <h2 style="color: #1e3a8a;">Expense Update from BudgetBuddy</h2>
+//             <p>Hello ${user.username},</p>
+//             <p>You’ve just saved new expenses. Here’s the breakdown:</p>
+//             <ul style="list-style-type: disc; padding-left: 20px;">
+//               ${Object.entries(latestExpense)
+//                 .map(([cat, amt]) => `<li>${cat}: ₹${amt.toFixed(2)}</li>`)
+//                 .join('')}
+//             </ul>
+//             <p>Total Deduction: ₹${totalDeduction.toFixed(2)}</p>
+//             <p>Remaining Salary: ₹${parseFloat(plainSalary).toFixed(2)}</p>
+//             <p style="color: ${isHighExpended ? '#dc2626' : '#16a34a'}; font-weight: bold;">
+//               ${isHighExpended ? 'High Expenditure Warning: You’ve spent over 50% of your salary!' : 'You’re managing your expenses well!'}
+//             </p>
+//             ${chartImage ? '<h3>Your Expense Chart:</h3><img src="cid:expense-chart" alt="Expense Chart" style="max-width: 100%; border-radius: 8px;" />' : ''}
+//             <p>Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if you have questions.</p>
+//             <p>Happy budgeting,<br>The BudgetBuddy Team</p>
+//             <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
+//           </div>
+//         `,
+//         attachments: chartImage
+//           ? [{
+//               filename: 'expense-chart.png',
+//               content: Buffer.from(chartImage.split(',')[1], 'base64'),
+//               cid: 'expense-chart',
+//             }]
+//           : [],
+//       };
+
+//       await transporter.sendMail(mailOptions);
+      
+//     }
+
+//     // Decrypt for response
+//     const decryptedSalary = decrypt(user.salary);
+//     const decryptedExpenses = user.expenses.map(exp => ({
+//       id: exp.id,
+//       expenses: JSON.parse(decrypt(exp.expenses)), // Decrypt and parse back to object
+//       date: exp.date,
+//     }));
+//     const decryptedLastImageContent = user.lastImageContent ? decrypt(user.lastImageContent) : '';
+
+//     res.json({
+//       username: user.username,
+//       email: user.email,
+//       salary: decryptedSalary,
+//       expenses: decryptedExpenses,
+//       lastImageContent: decryptedLastImageContent,
+//       message: 'Profile updated successfully',
+//     });
+//   } catch (error) {
+//     console.error('Profile update error:', error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// });
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
     const { salary, expenses, lastImageContent, chartImage } = req.body;
+    console.log('Request body:', { salary, expenses, lastImageContent, chartImage }); // Log incoming data
+
     const updates = {};
 
     // Encrypt fields for database storage
@@ -233,22 +326,34 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (expenses !== undefined) {
       updates.expenses = expenses.map(exp => ({
         id: exp.id,
-        expenses: encrypt(JSON.stringify(exp.expenses)), // Encrypt the expenses object as a JSON string
-        date: new Date(exp.date), // Ensure date is a Date object
+        expenses: encrypt(JSON.stringify(exp.expenses)),
+        date: new Date(exp.date),
       }));
+      console.log('Encrypted expenses for DB:', updates.expenses); // Log before saving
     }
     if (lastImageContent !== undefined) {
       updates.lastImageContent = encrypt(lastImageContent);
     }
 
-    const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true }).select('-password');
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    console.log('Updates to apply:', updates); // Log updates object
 
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updates }, // Use $set to ensure only specified fields are updated
+      { new: true, runValidators: true } // Return updated doc and enforce schema validation
+    ).select('-password');
+
+    if (!user) {
+      console.log('User not found for ID:', req.user.id);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log('Updated user from DB:', user); // Log the updated user
+
+    // Send email notification if expenses are provided
     if (expenses && expenses.length > 0) {
-      const latestExpense = expenses[expenses.length - 1].expenses; // Plain text from request
+      const latestExpense = expenses[expenses.length - 1].expenses;
       const totalDeduction = Object.values(latestExpense).reduce((sum, val) => sum + val, 0);
-      
-      // Use plain-text salary from request, fallback to decrypted current salary if not provided
       const plainSalary = salary !== undefined && salary !== null ? salary : decrypt(user.salary);
       const isHighExpended = totalDeduction > parseFloat(plainSalary) * 0.5;
 
@@ -287,14 +392,14 @@ router.put('/profile', authenticateToken, async (req, res) => {
       };
 
       await transporter.sendMail(mailOptions);
-      
+      console.log('Expense update email sent to:', user.email);
     }
 
     // Decrypt for response
     const decryptedSalary = decrypt(user.salary);
     const decryptedExpenses = user.expenses.map(exp => ({
       id: exp.id,
-      expenses: JSON.parse(decrypt(exp.expenses)), // Decrypt and parse back to object
+      expenses: JSON.parse(decrypt(exp.expenses)),
       date: exp.date,
     }));
     const decryptedLastImageContent = user.lastImageContent ? decrypt(user.lastImageContent) : '';
@@ -308,7 +413,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
       message: 'Profile updated successfully',
     });
   } catch (error) {
-    console.error('Profile update error:', error);
+    console.error('Profile update error:', error.stack); // Include stack trace for better debugging
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
