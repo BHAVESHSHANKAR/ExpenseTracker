@@ -64,8 +64,6 @@ const transporter = nodemailer.createTransport({
   debug: true, // Enable SMTP debug output
   logger: true, // Log to console
 });
-
-// Verify email configuration on startup
 transporter.verify((error, success) => {
   if (error) {
     console.error('Email transporter verification failed:', error.stack);
@@ -100,26 +98,6 @@ router.post('/send-otp', async (req, res) => {
       { otp, createdAt: new Date(), expiresAt: expiryTime },
       { upsert: true, new: true }
     );
-
-    // const mailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: email,
-    //   subject: 'BudgetBuddy: Confirm Your Email to Get Started',
-    //   html: `
-    //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border: 1px solid #d1d5db; border-radius: 8px;">
-    //       <h2 style="color: #1e40af; text-align: center;">Welcome to BudgetBuddy!</h2>
-    //       <p>Hello,</p>
-    //       <p>Thank you for joining BudgetBuddy! Please verify your email with the following OTP:</p>
-    //       <h3 style="color: #2563eb; font-size: 22px; text-align: center;">${otp}</h3>
-    //       <p>Note: This code will expire in 10 minutes.</p>
-    //       <p>For any assistance, feel free to reach out to us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
-    //       <p>Happy budgeting!<br>— The BudgetBuddy Team</p>
-    //       <footer style="font-size: 12px; color: #6b7280; text-align: center; margin-top: 20px;">
-    //         © 2025 BudgetBuddy
-    //       </footer>
-    //     </div>
-    //   `,
-    // };
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -184,9 +162,7 @@ router.post('/send-otp', async (req, res) => {
             <p>Thank you for signing up with <strong>BudgetBuddy</strong>. To complete your registration, please use the verification code below:</p>
             <div class="otp-code">${otp}</div>
             <p>This code is valid for <strong>10 minutes</strong>. If you did not request this, please ignore this email.</p>
-            <p>For any assistance, contact us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
             <p>Happy budgeting!<br><strong>The BudgetBuddy Team</strong></p>
-            <div class="footer">© 2025 BudgetBuddy. All rights reserved.</div>
           </div>
         </body>
         </html>
@@ -330,40 +306,6 @@ router.put('/profile', authenticateToken, async (req, res) => {
         const totalDeduction = Object.values(latestExpense).reduce((sum, val) => sum + val, 0);
         const plainSalary = salary !== undefined && salary !== null ? salary : decrypt(user.salary);
         const isHighExpended = totalDeduction > parseFloat(plainSalary) * 0.5;
-
-        // const mailOptions = {
-        //   from: process.env.EMAIL_USER,
-        //   to: user.email,
-        //   subject: 'BudgetBuddy - Your Latest Expense Update',
-        //   html: `
-        //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
-        //       <h2 style="color: #1e3a8a;">Expense Update from BudgetBuddy</h2>
-        //       <p>Hello ${user.username},</p>
-        //       <p>You’ve just saved new expenses. Here’s the breakdown:</p>
-        //       <ul style="list-style-type: disc; padding-left: 20px;">
-        //         ${Object.entries(latestExpense)
-        //           .map(([cat, amt]) => `<li>${cat}: ₹${amt.toFixed(2)}</li>`)
-        //           .join('')}
-        //       </ul>
-        //       <p>Total Deduction: ₹${totalDeduction.toFixed(2)}</p>
-        //       <p>Remaining Salary: ₹${parseFloat(plainSalary).toFixed(2)}</p>
-        //       <p style="color: ${isHighExpended ? '#dc2626' : '#16a34a'}; font-weight: bold;">
-        //         ${isHighExpended ? 'High Expenditure Warning: You’ve spent over 50% of your salary!' : 'You’re managing your expenses well!'}
-        //       </p>
-        //       ${chartImage ? '<h3>Your Expense Chart:</h3><img src="cid:expense-chart" alt="Expense Chart" style="max-width: 100%; border-radius: 8px;" />' : ''}
-        //       <p>Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if you have questions.</p>
-        //       <p>Happy budgeting,<br>The BudgetBuddy Team</p>
-        //       <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
-        //     </div>
-        //   `,
-        //   attachments: chartImage
-        //     ? [{
-        //         filename: 'expense-chart.png',
-        //         content: Buffer.from(chartImage.split(',')[1], 'base64'),
-        //         cid: 'expense-chart',
-        //       }]
-        //     : [],
-        // };
         const mailOptions = {
           from: process.env.EMAIL_USER,
           to: user.email,
@@ -456,10 +398,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
                     <h3>Your Expense Chart:</h3>
                     <img src="cid:expense-chart" alt="Expense Chart" />
                   </div>
-                ` : ''}
-                <p>For any assistance, reach us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
+                ` : ''}     
                 <p>Happy budgeting,<br><strong>The BudgetBuddy Team</strong></p>
-                <div class="footer">© 2025 BudgetBuddy. All rights reserved.</div>
               </div>
             </body>
             </html>
