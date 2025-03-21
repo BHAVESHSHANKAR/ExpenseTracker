@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const app = express();
 app.use(cors({
-  origin:"http://localhost:5173",
+  origin:"https://expense-tracker-two-bice.vercel.app",
   credentials:true,
 }));
 app.use(express.json());
