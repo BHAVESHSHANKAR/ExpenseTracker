@@ -600,25 +600,46 @@ router.post('/send-otp', async (req, res) => {
       { upsert: true, new: true }
     );
 
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: 'BudgetBuddy: Confirm Your Email to Get Started',
+    //   html: `
+    //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border: 1px solid #d1d5db; border-radius: 8px;">
+    //       <h2 style="color: #1e40af; text-align: center;">Welcome to BudgetBuddy!</h2>
+    //       <p>Hello,</p>
+    //       <p>Thank you for joining BudgetBuddy! Please verify your email with the following OTP:</p>
+    //       <h3 style="color: #2563eb; font-size: 22px; text-align: center;">${otp}</h3>
+    //       <p>Note: This code will expire in 10 minutes.</p>
+    //       <p>For any assistance, feel free to reach out to us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
+    //       <p>Happy budgeting!<br>— The BudgetBuddy Team</p>
+    //       <footer style="font-size: 12px; color: #6b7280; text-align: center; margin-top: 20px;">
+    //         © 2025 BudgetBuddy
+    //       </footer>
+    //     </div>
+    //   `,
+    // };
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"BudgetBuddy Team" <${process.env.EMAIL_USER}>`, // Use a friendly sender name
       to: email,
-      subject: 'BudgetBuddy: Confirm Your Email to Get Started',
+      subject: 'Welcome to BudgetBuddy! Verify Your Email',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border: 1px solid #d1d5db; border-radius: 8px;">
-          <h2 style="color: #1e40af; text-align: center;">Welcome to BudgetBuddy!</h2>
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">
+          <h2 style="color: #0d6efd; text-align: center;">Welcome to BudgetBuddy!</h2>
           <p>Hello,</p>
-          <p>Thank you for joining BudgetBuddy! Please verify your email with the following OTP:</p>
-          <h3 style="color: #2563eb; font-size: 22px; text-align: center;">${otp}</h3>
-          <p>Note: This code will expire in 10 minutes.</p>
-          <p>For any assistance, feel free to reach out to us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
-          <p>Happy budgeting!<br>— The BudgetBuddy Team</p>
-          <footer style="font-size: 12px; color: #6b7280; text-align: center; margin-top: 20px;">
-            © 2025 BudgetBuddy
+          <p>We're thrilled to have you onboard! To get started, please verify your email with the One-Time Password (OTP) below:</p>
+          <h3 style="color: #198754; font-size: 22px; text-align: center; background-color: #e9f5e8; padding: 10px; border-radius: 4px;">${otp}</h3>
+          <p style="color: #212529;">This OTP is valid for the next <strong>10 minutes</strong>. If you didn't request this email, feel free to ignore it.</p>
+          <p>Need assistance? Reach out to us at <a href="mailto:budgetbuddy004@gmail.com" style="color: #0d6efd; text-decoration: none;">budgetbuddy004@gmail.com</a>.</p>
+          <p style="text-align: center; font-style: italic;">Happy budgeting!</p>
+          <p style="text-align: right; font-size: 14px; font-weight: bold; margin-top: 20px;">— The BudgetBuddy Team</p>
+          <footer style="font-size: 12px; color: #6c757d; text-align: center; margin-top: 20px;">
+            © ${new Date().getFullYear()} BudgetBuddy. All rights reserved.
           </footer>
         </div>
       `,
     };
+    
 
     const info = await transporter.sendMail(mailOptions);
     console.log('OTP email sent:', info.messageId);
@@ -756,29 +777,64 @@ router.put('/profile', authenticateToken, async (req, res) => {
         const plainSalary = salary !== undefined && salary !== null ? salary : decrypt(user.salary);
         const isHighExpended = totalDeduction > parseFloat(plainSalary) * 0.5;
 
+        // const mailOptions = {
+        //   from: process.env.EMAIL_USER,
+        //   to: user.email,
+        //   subject: 'BudgetBuddy - Your Latest Expense Update',
+        //   html: `
+        //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
+        //       <h2 style="color: #1e3a8a;">Expense Update from BudgetBuddy</h2>
+        //       <p>Hello ${user.username},</p>
+        //       <p>You’ve just saved new expenses. Here’s the breakdown:</p>
+        //       <ul style="list-style-type: disc; padding-left: 20px;">
+        //         ${Object.entries(latestExpense)
+        //           .map(([cat, amt]) => `<li>${cat}: ₹${amt.toFixed(2)}</li>`)
+        //           .join('')}
+        //       </ul>
+        //       <p>Total Deduction: ₹${totalDeduction.toFixed(2)}</p>
+        //       <p>Remaining Salary: ₹${parseFloat(plainSalary).toFixed(2)}</p>
+        //       <p style="color: ${isHighExpended ? '#dc2626' : '#16a34a'}; font-weight: bold;">
+        //         ${isHighExpended ? 'High Expenditure Warning: You’ve spent over 50% of your salary!' : 'You’re managing your expenses well!'}
+        //       </p>
+        //       ${chartImage ? '<h3>Your Expense Chart:</h3><img src="cid:expense-chart" alt="Expense Chart" style="max-width: 100%; border-radius: 8px;" />' : ''}
+        //       <p>Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if you have questions.</p>
+        //       <p>Happy budgeting,<br>The BudgetBuddy Team</p>
+        //       <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
+        //     </div>
+        //   `,
+        //   attachments: chartImage
+        //     ? [{
+        //         filename: 'expense-chart.png',
+        //         content: Buffer.from(chartImage.split(',')[1], 'base64'),
+        //         cid: 'expense-chart',
+        //       }]
+        //     : [],
+        // };
         const mailOptions = {
-          from: process.env.EMAIL_USER,
+          from: `"BudgetBuddy Team" <${process.env.EMAIL_USER}>`, // Add sender name
           to: user.email,
           subject: 'BudgetBuddy - Your Latest Expense Update',
           html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
-              <h2 style="color: #1e3a8a;">Expense Update from BudgetBuddy</h2>
+            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 10px;">
+              <h2 style="color: #0d6efd;">Expense Update from BudgetBuddy</h2>
               <p>Hello ${user.username},</p>
-              <p>You’ve just saved new expenses. Here’s the breakdown:</p>
+              <p>We’ve updated your expense records. Here's the latest breakdown:</p>
               <ul style="list-style-type: disc; padding-left: 20px;">
                 ${Object.entries(latestExpense)
                   .map(([cat, amt]) => `<li>${cat}: ₹${amt.toFixed(2)}</li>`)
                   .join('')}
               </ul>
-              <p>Total Deduction: ₹${totalDeduction.toFixed(2)}</p>
-              <p>Remaining Salary: ₹${parseFloat(plainSalary).toFixed(2)}</p>
-              <p style="color: ${isHighExpended ? '#dc2626' : '#16a34a'}; font-weight: bold;">
-                ${isHighExpended ? 'High Expenditure Warning: You’ve spent over 50% of your salary!' : 'You’re managing your expenses well!'}
+              <p><strong>Total Deduction:</strong> ₹${totalDeduction.toFixed(2)}</p>
+              <p><strong>Remaining Salary:</strong> ₹${parseFloat(plainSalary).toFixed(2)}</p>
+              <p style="color: ${isHighExpended ? '#dc3545' : '#28a745'}; font-weight: bold;">
+                ${isHighExpended ? 'Note: You’ve spent over 50% of your salary.' : 'Great job managing your budget!'}
               </p>
               ${chartImage ? '<h3>Your Expense Chart:</h3><img src="cid:expense-chart" alt="Expense Chart" style="max-width: 100%; border-radius: 8px;" />' : ''}
-              <p>Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if you have questions.</p>
-              <p>Happy budgeting,<br>The BudgetBuddy Team</p>
-              <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
+              <p>For any questions, feel free to email us at <a href="mailto:budgetbuddy004@gmail.com" style="color: #0d6efd;">budgetbuddy004@gmail.com</a>.</p>
+              <p>Thank you for using BudgetBuddy!<br>The BudgetBuddy Team</p>
+              <footer style="font-size: 12px; color: #6c757d; margin-top: 20px;">
+                © 2025 BudgetBuddy. All rights reserved.
+              </footer>
             </div>
           `,
           attachments: chartImage
@@ -789,6 +845,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
               }]
             : [],
         };
+        
 
         console.log('Attempting to send email to:', user.email);
         const info = await transporter.sendMail(mailOptions);
