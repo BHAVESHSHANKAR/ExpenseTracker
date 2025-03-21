@@ -62,8 +62,8 @@ const authenticateToken = (req, res, next) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.USER,
-    pass: process.env.PASS,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
   debug: true,
   logger: true,
@@ -95,19 +95,38 @@ router.post('/send-otp', async (req, res) => {
 
     
 
+    // const mailOptions = {
+    //   from: process.env.USER,
+    //   to: email,
+    //   subject: 'Welcome to BudgetBuddy - Verify Your Account with OTP',
+    //   html: `
+    //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
+    //       <h2 style="color: #1e3a8a;">Welcome to BudgetBuddy!</h2>
+    //       <p>Hello,</p>
+    //       <p>Thank you for joining BudgetBuddy! Verify your email with this OTP:</p>
+    //       <h3 style="color: #38bdf8; font-size: 24px;">${otp}</h3>
+    //       <p>Enter this code within 10 minutes. Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if needed.</p>
+    //       <p>Happy budgeting,<br>The BudgetBuddy Team</p>
+    //       <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
+    //     </div>
+    //   `,
+    // };
     const mailOptions = {
-      from: process.env.USER,
+      from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Welcome to BudgetBuddy - Verify Your Account with OTP',
+      subject: 'BudgetBuddy: Confirm Your Email to Get Started',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 10px;">
-          <h2 style="color: #1e3a8a;">Welcome to BudgetBuddy!</h2>
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border: 1px solid #d1d5db; border-radius: 8px;">
+          <h2 style="color: #1e40af; text-align: center;">Welcome to BudgetBuddy!</h2>
           <p>Hello,</p>
-          <p>Thank you for joining BudgetBuddy! Verify your email with this OTP:</p>
-          <h3 style="color: #38bdf8; font-size: 24px;">${otp}</h3>
-          <p>Enter this code within 10 minutes. Contact <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a> if needed.</p>
-          <p>Happy budgeting,<br>The BudgetBuddy Team</p>
-          <footer style="font-size: 12px; color: #6b7280; margin-top: 20px;">© 2025 BudgetBuddy.</footer>
+          <p>Thank you for joining BudgetBuddy! Please verify your email with the following OTP:</p>
+          <h3 style="color: #2563eb; font-size: 22px; text-align: center;">${otp}</h3>
+          <p>Note: This code will expire in 10 minutes.</p>
+          <p>For any assistance, feel free to reach out to us at <a href="mailto:budgetbuddy004@gmail.com">budgetbuddy004@gmail.com</a>.</p>
+          <p>Happy budgeting!<br>— The BudgetBuddy Team</p>
+          <footer style="font-size: 12px; color: #6b7280; text-align: center; margin-top: 20px;">
+            © 2025 BudgetBuddy | <a href="[unsubscribe_link]" style="color: #2563eb;">Unsubscribe</a>
+          </footer>
         </div>
       `,
     };
@@ -234,7 +253,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
       const isHighExpended = totalDeduction > parseFloat(plainSalary) * 0.5;
 
       const mailOptions = {
-        from: process.env.USER,
+        from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'BudgetBuddy - Your Latest Expense Update',
         html: `
@@ -311,7 +330,7 @@ router.post('/expenses/gemini', authenticateToken, async (req, res) => {
     ]);
 
     const text = result.response.text();
-    console.log('Gemini extracted text:', text);
+    
 
     const expenseMatches = text.matchAll(/\$?(\d+\.?\d{0,2})\s*\(?([A-Za-z]+)\)?|([A-Za-z]+)\s*\$?(\d+\.?\d{0,2})/g);
     const expenses = {};
