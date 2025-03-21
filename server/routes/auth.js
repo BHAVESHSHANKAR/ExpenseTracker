@@ -315,43 +315,35 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
     const { salary, expenses, lastImageContent, chartImage } = req.body;
-    console.log('Request body:', { salary, expenses, lastImageContent, chartImage }); // Log incoming data
+    console.log('Request body:', { salary, expenses, lastImageContent, chartImage });
 
     const updates = {};
-
-    // Encrypt fields for database storage
-    if (salary !== undefined && salary !== null) {
-      updates.salary = encrypt(salary.toString());
-    }
+    if (salary !== undefined && salary !== null) updates.salary = encrypt(salary.toString());
     if (expenses !== undefined) {
       updates.expenses = expenses.map(exp => ({
         id: exp.id,
         expenses: encrypt(JSON.stringify(exp.expenses)),
         date: new Date(exp.date),
       }));
-      console.log('Encrypted expenses for DB:', updates.expenses); // Log before saving
     }
-    if (lastImageContent !== undefined) {
-      updates.lastImageContent = encrypt(lastImageContent);
-    }
-
-    console.log('Updates to apply:', updates); // Log updates object
+    if (lastImageContent !== undefined) updates.lastImageContent = encrypt(lastImageContent);
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { $set: updates }, // Use $set to ensure only specified fields are updated
-      { new: true, runValidators: true } // Return updated doc and enforce schema validation
+      { $set: updates },
+      { new: true, runValidators: true }
     ).select('-password');
 
-    if (!user) {
-      console.log('User not found for ID:', req.user.id);
-      return res.status(404).json({ message: 'User not found' });
-    }
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    console.log('Updated user from DB:', user); // Log the updated user
-
-    // Send email notification if expenses are provided
+    // Email sending logic
     if (expenses && expenses.length > 0) {
+      // Validate environment variables
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error('Email credentials missing: EMAIL_USER or EMAIL_PASS not set');
+        throw new Error('Email service misconfigured');
+      }
+
       const latestExpense = expenses[expenses.length - 1].expenses;
       const totalDeduction = Object.values(latestExpense).reduce((sum, val) => sum + val, 0);
       const plainSalary = salary !== undefined && salary !== null ? salary : decrypt(user.salary);
@@ -391,11 +383,16 @@ router.put('/profile', authenticateToken, async (req, res) => {
           : [],
       };
 
-      await transporter.sendMail(mailOptions);
-      console.log('Expense update email sent to:', user.email);
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log('Expense update email sent successfully to:', user.email);
+      } catch (emailError) {
+        console.error('Failed to send expense update email:', emailError.stack);
+        // Don’t throw here; let the response proceed, but log the issue
+      }
     }
 
-    // Decrypt for response
+    // Prepare response
     const decryptedSalary = decrypt(user.salary);
     const decryptedExpenses = user.expenses.map(exp => ({
       id: exp.id,
@@ -413,7 +410,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
       message: 'Profile updated successfully',
     });
   } catch (error) {
-    console.error('Profile update error:', error.stack); // Include stack trace for better debugging
+    console.error('Profile update error:', error.stack);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
