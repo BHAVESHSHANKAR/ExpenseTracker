@@ -539,11 +539,11 @@ function Userhome() {
         </div>
 
         {/* Personal Assistant Button */}
-        <div className="uh-assistant-container">
+        {/* <div className="uh-assistant-container">
           <button className="uh-assistant-btn" onClick={toggleChat}>
             <MessageSquare size={24} /> Finance Assistant
           </button>
-        </div>
+        </div> */}
 
         {/* Chat Popup */}
         {isChatOpen && (
