@@ -388,6 +388,7 @@ function Userhome() {
         <div className="uh-expense-section">
           <div className="uh-expense-tracker">
             <h2>Expense Tracker (Image-Based)</h2>
+            <p>If your listed items not shown here means Click Process Image again ☺️</p>
             <p>Remaining Salary: ₹{parseFloat(salary || 0).toFixed(2)}</p>
             <input
               type="file"
