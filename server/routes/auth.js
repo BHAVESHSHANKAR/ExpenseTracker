@@ -442,53 +442,138 @@ router.put('/profile', authenticateToken, async (req, res) => {
 });
 
 // Process Expenses with Gemini (Image Processing)
+// router.post('/expenses/gemini', authenticateToken, async (req, res) => {
+//   try {
+//     const { image } = req.body;
+//     if (!image) return res.status(400).json({ message: 'Image data is required' });
+
+//     const imgBuffer = Buffer.from(image, 'base64');
+//     const result = await modelImage.generateContent([
+//       {
+//         inlineData: {
+//           data: imgBuffer.toString('base64'),
+//           mimeType: 'image/png',
+//         },
+//       },
+//     ]);
+
+//     const text = result.response.text();
+//     const expenseMatches = text.matchAll(/\$?(\d+\.?\d{0,2})\s*\(?([A-Za-z]+)\)?|([A-Za-z]+)\s*\$?(\d+\.?\d{0,2})/g);
+//     const expenses = {};
+//     let totalAmount = 0;
+//     const expenseLines = [];
+
+//     for (const match of expenseMatches) {
+//       let category, amount;
+//       if (match[1] && match[2]) {
+//         amount = parseFloat(match[1]);
+//         category = match[2];
+//       } else if (match[3] && match[4]) {
+//         category = match[3];
+//         amount = parseFloat(match[4]);
+//       }
+//       if (category && amount) {
+//         category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+//         expenses[category] = (expenses[category] || 0) + amount;
+//         totalAmount += amount;
+//         expenseLines.push(`${category} ₹${amount.toFixed(2)}`);
+//       }
+//     }
+
+//     const extractedText = expenseLines.join(', ');
+//     if (Object.keys(expenses).length === 0) {
+//       return res.status(400).json({ message: 'No valid expense data found in the image' });
+//     }
+
+//     res.json({
+//       extractedText: extractedText || text,
+//       expenses,
+//       totalAmount,
+//     });
+//   } catch (error) {
+//     console.error('Gemini Image API error:', error.stack);
+//     res.status(500).json({ message: 'Failed to process image', error: error.message });
+//   }
+// });
+// Process Expenses with Gemini (Image Processing)
 router.post('/expenses/gemini', authenticateToken, async (req, res) => {
   try {
-    const { image } = req.body;
+    const { image, mimeType = 'image/png' } = req.body; // Default to PNG, allow client to specify
     if (!image) return res.status(400).json({ message: 'Image data is required' });
 
+    // Validate mimeType (only allow specific image types)
+    const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowedMimeTypes.includes(mimeType)) {
+      return res.status(400).json({
+        message: `Invalid image format. Accepted formats: ${allowedMimeTypes.join(', ')}`,
+      });
+    }
+
+    // Decode base64 image
     const imgBuffer = Buffer.from(image, 'base64');
+
+    // Prompt Gemini to extract expenses as key-value pairs
+    const prompt = `
+      You are an expense extractor. Analyze the provided image and extract expense data in a structured key-value format.
+      Each key should be a category (e.g., Food, Transport) and each value should be a numerical amount (e.g., 50.00).
+      If a currency symbol is present (e.g., $, ₹), ignore it and return only the number.
+      Return the result as a JSON object like: {"Food": 50.00, "Transport": 25.50}.
+      If no expenses are found, return an empty object: {}.
+      Additionally, provide the raw extracted text for reference.
+    `;
+
     const result = await modelImage.generateContent([
+      prompt,
       {
         inlineData: {
           data: imgBuffer.toString('base64'),
-          mimeType: 'image/png',
+          mimeType: mimeType, // Use the provided or default mimeType
         },
       },
     ]);
 
-    const text = result.response.text();
-    const expenseMatches = text.matchAll(/\$?(\d+\.?\d{0,2})\s*\(?([A-Za-z]+)\)?|([A-Za-z]+)\s*\$?(\d+\.?\d{0,2})/g);
-    const expenses = {};
-    let totalAmount = 0;
-    const expenseLines = [];
-
-    for (const match of expenseMatches) {
-      let category, amount;
-      if (match[1] && match[2]) {
-        amount = parseFloat(match[1]);
-        category = match[2];
-      } else if (match[3] && match[4]) {
-        category = match[3];
-        amount = parseFloat(match[4]);
+    const responseText = result.response.text().trim();
+    
+    // Attempt to parse the response as JSON
+    let expenses = {};
+    let extractedText = responseText;
+    try {
+      // Look for JSON-like content in the response
+      const jsonMatch = responseText.match(/{[^}]+}/);
+      if (jsonMatch) {
+        expenses = JSON.parse(jsonMatch[0]);
+        extractedText = responseText.replace(jsonMatch[0], '').trim() || responseText;
       }
-      if (category && amount) {
-        category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
-        expenses[category] = (expenses[category] || 0) + amount;
-        totalAmount += amount;
-        expenseLines.push(`${category} ₹${amount.toFixed(2)}`);
+    } catch (parseError) {
+      console.warn('Failed to parse JSON from Gemini response:', parseError.message);
+      // Fallback: Use regex to extract key-value pairs if JSON parsing fails
+      const expenseMatches = responseText.matchAll(/([A-Za-z]+)\s*[:=]\s*\$?(\d+\.?\d{0,2})/g);
+      for (const match of expenseMatches) {
+        const category = match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
+        const amount = parseFloat(match[2]);
+        expenses[category] = amount;
       }
     }
 
-    const extractedText = expenseLines.join(', ');
+    // Calculate total amount
+    const totalAmount = Object.values(expenses).reduce((sum, val) => sum + val, 0);
+
     if (Object.keys(expenses).length === 0) {
-      return res.status(400).json({ message: 'No valid expense data found in the image' });
+      return res.status(400).json({
+        message: 'No valid expense data found in the image',
+        extractedText,
+      });
     }
+
+    // Format expenses for display
+    const expenseLines = Object.entries(expenses)
+      .map(([category, amount]) => `${category}: ₹${amount.toFixed(2)}`)
+      .join(', ');
 
     res.json({
-      extractedText: extractedText || text,
-      expenses,
-      totalAmount,
+      extractedText: expenseLines || extractedText, // Display formatted expenses or raw text
+      expenses, // Structured key-value object
+      totalAmount: totalAmount.toFixed(2), // Total as a string with 2 decimal places
     });
   } catch (error) {
     console.error('Gemini Image API error:', error.stack);
